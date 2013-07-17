@@ -1,11 +1,11 @@
 import sys
 sys.path.append('.')
+sys.path.append('..')
 import readers.simple_sequence as ssr
 import sequences.hmm as hmmc
 import readers.pos_corpus as pcc
 import sequences.confusion_matrix as cm
 import pdb
-
 
 print "------------"
 print "Exercise 2.1"
@@ -152,6 +152,9 @@ print simple.test.seq_list[1]
 print "------------"
 print "Exercise 2.9"
 print "------------"
+
+# To be able to see the results
+np.seterr(divide='ignore',invalid='ignore')
 
 corpus = pcc.PostagCorpus()
 train_seq = corpus.read_sequence_list_conll("../data/train-02-21.conll",max_sent_len=15,max_nr_sent=1000)
