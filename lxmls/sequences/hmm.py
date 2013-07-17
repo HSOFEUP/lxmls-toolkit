@@ -2,6 +2,7 @@ import numpy as np
 import lxmls.sequences.sequence_classifier as sc
 import lxmls.sequences.confusion_matrix as cm
 from lxmls.sequences.log_domain import *
+import matplotlib.pyplot as plt
 
 import pdb
 

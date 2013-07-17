@@ -4,6 +4,7 @@ from lxmls.util.my_math_utils import *
 from itertools import izip
 import operator
 import pdb
+import matplotlib.pyplot as plt
 
 ## Colour for each pos tag
 tag_colors = {
