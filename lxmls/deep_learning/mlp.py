@@ -99,23 +99,26 @@ class MLP():
        Computes the gradients of the network with respect to cross entropy 
        error cost
        '''
+
+       ###################################
+       # TO BE COMPLETED IN EXERCISE 7.2 
+       ###################################
+
+       raise NotImplementedError, "This is to be implemented in Ex. 7.2"
+
        # Run forward and store activations for each layer 
        activations = self.forward(x, backProp=True) 
        # For each layer in reverse store the gradients we compute
        delta_weights = [None]*self.n_layers 
-       for n in np.arange(len(self.weights)-1, -1, -1):
-
-           ###################################
-           # TO BE COMPLETED IN EXERCISE 7.2 
-           ###################################
-
+       #for n in np.arange(len(self.weights)-1, -1, -1):
+    
            # If it is the last layer, compute the cost gradient
-           if n == self.n_layers-1:
+           #if n == self.n_layers-1:
 
                # ...
 
            # Otherwise, propagate the error one step backwards
-           else:
+           #else:
 
                # ...
 
@@ -126,7 +129,7 @@ class MLP():
            # Store this gradients 
            # HINT: Each gradient has the sice of the coresponding parameter
            # matrix!.
-           delta_weights[n] = [delta_W, delta_w]
+           #delta_weights[n] = [delta_W, delta_w]
        return delta_weights 
 
     def random_weigth_init(self, rng, geometry, actvfunc):
@@ -243,13 +246,15 @@ class TheanoMLP(MLP):
         # TO BE COMPLETED IN EXERCISE 7.4 
         ###################################
 
+        raise NotImplementedError, "This is to be implemented in Ex. 7.4"
+
         # These will store the symbolic activations and weigths at each layer 
         # HINT: The first one is the input!
         self.tilde_z = [T.matrix('x')]
         self.params  = []
 
         # HINT: As in the Numpy case, we will need to iterate over each layer
-        for n, W, activ in zip(np.arange(self.n_layers), self.weights, self.actvfunc):
+        #for n, W, activ in zip(np.arange(self.n_layers), self.weights, self.actvfunc):
 
             # Turn weights into theano shared vars 
 
@@ -259,7 +264,9 @@ class TheanoMLP(MLP):
 
             # Store symbolic activations and weigths for this layer
 
-        # Get a function returning the forward pass
+        # HINT: Get a function returning the forward pass
+        #self.th_forward =  
+
 
     def compile_grads(self):
         '''
