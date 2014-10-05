@@ -104,33 +104,28 @@ class MLP():
        # For each layer in reverse store the gradients we compute
        delta_weights = [None]*self.n_layers 
        for n in np.arange(len(self.weights)-1, -1, -1):
+
+           ###################################
+           # TO BE COMPLETED IN EXERCISE 7.2 
+           ###################################
+
            # If it is the last layer, compute the cost gradient
-           # Note: This assumes softmax, see sanity_checks()
            if n == self.n_layers-1:
-               I  = index2onehot(y, self.weights[-1][0].shape[0])
-               e  = activations[n+1] - I 
+
+               # ...
+
            # Otherwise, propagate the error one step backwards
-           # Note: This assumes sigmoid, see sanity_checks()
            else:
-               e  = np.dot(self.weights[n+1][0].T, e)
-               e *= np.multiply(activations[n+1], (1-activations[n+1]))
+
+               # ...
+
            # Compute the weight gradient from the errors
-           # Note that for a sparse input layer we only store the gradient for
-           # were the active inputs are involved
-           if self.sparse_input and n == 0:
-               delta_W = ssp.csc_matrix(self.weights[n][0].shape) 
-               e       = ssp.csc_matrix(e)
-               for l in np.arange(e.shape[1]):
-                  delta_W = delta_W + e[:, l] * activations[n][:, l].T
-               # Bias gradient
-               delta_w = e.sum(1) 
-           else:
-               delta_W = np.zeros(self.weights[n][0].shape)
-               for l in np.arange(e.shape[1]):
-                  delta_W += np.outer(e[:, l], activations[n][:, l])
-               # Bias gradient
-               delta_w = np.sum(e, 1, keepdims=True)
+
+           # Bias gradient
+
            # Store this gradients 
+           # HINT: Each gradient has the sice of the coresponding parameter
+           # matrix!.
            delta_weights[n] = [delta_W, delta_w]
        return delta_weights 
 
@@ -243,43 +238,28 @@ class TheanoMLP(MLP):
         '''
         Compile the forward pass as a theano function
         '''
-        # These will store the outputs at each layer including the initial 
-        # input and the weights respectively
 
-        # Use sparse matrices for the first layer if solicited 
-        if self.sparse_input:
-            self.tilde_z = [sparse.csc_matrix(name='x')]
-        else:
-            self.tilde_z = [T.matrix('x')]
+        ###################################
+        # TO BE COMPLETED IN EXERCISE 7.4 
+        ###################################
+
+        # These will store the symbolic activations and weigths at each layer 
+        # HINT: The first one is the input!
+        self.tilde_z = [T.matrix('x')]
         self.params  = []
+
+        # HINT: As in the Numpy case, we will need to iterate over each layer
         for n, W, activ in zip(np.arange(self.n_layers), self.weights, self.actvfunc):
-            # Use sparse matrices for the first layer if solicited 
-            if self.sparse_input and n == 0:
-                th_W = sparse.shared(ssp.csc_matrix(W[0]), 
-                                     name='W%d' % n, borrow=True)
-                th_b = theano.shared(value=W[1], name='b%d' % n, borrow=True, 
-                                     broadcastable=(False, True))
 
-                # Linear transformation
-                z = sparse.dot(th_W, self.tilde_z[-1]) + th_b
+            # Turn weights into theano shared vars 
 
-            else:
-                # Turn weights into theano shared vars 
-                th_W = theano.shared(value=W[0], name='W%d' % n, borrow=True)
-                th_b = theano.shared(value=W[1], name='b%d' % n, borrow=True, 
-                                     broadcastable=(False, True))
-                # Linear transformation
-                z = T.dot(th_W, self.tilde_z[-1]) + th_b
-            # Non-linear transformation 
-            if activ == "sigmoid":
-                tmp = T.nnet.sigmoid(z)
-            elif activ == "softmax": 
-                tmp = T.nnet.softmax(z.T).T
-            # Store values for this layer
-            self.tilde_z.append(tmp)
-            self.params.append([th_W, th_b])
+            # Linear transformation
+
+            # Non-linear transformation(s) 
+
+            # Store symbolic activations and weigths for this layer
+
         # Get a function returning the forward pass
-        self.th_forward = theano.function([self.tilde_z[0]], self.tilde_z[-1]) 
 
     def compile_grads(self):
         '''
